@@ -59,7 +59,6 @@ describe('Player', () => {
       expect(player.serializeForUpdate())
         .toEqual(expect.objectContaining({
           hp: Constants.PLAYER_MAX_HP,
-          direction: expect.any(Number),
         }));
     });
   });

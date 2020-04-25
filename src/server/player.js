@@ -43,7 +43,6 @@ class Player extends ObjectClass {
   serializeForUpdate() {
     return {
       ...(super.serializeForUpdate()),
-      XDirection: Math.atan2(this.Yspeed,  this.Xspeed) / Math.PI * 180,
       hp: this.hp,
     };
   }

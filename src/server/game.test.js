@@ -33,28 +33,22 @@ describe('Game', () => {
     expect(game.shouldSendUpdate).toBe(false);
   });
 
-  describe('handleInput', () => {
-    it('should update the direction of a player', () => {
-      const game = new Game();
-      const socket = {
-        id: '1234',
-        emit: jest.fn(),
-      };
-      game.addPlayer(socket, 'guest');
+  it('should update the direction of a player', () => {
+    const game = new Game();
+    const socket = {
+      id: '1234',
+      emit: jest.fn(),
+    };
+    game.addPlayer(socket, 'guest');
+    game.handleInput(socket, xDirection=Constants.DIRECTIONS.LEFT, yDirection=Constants.DIRECTIONS.UP);
 
-      game.handleInput(socket, 2);
+    jest.runOnlyPendingTimers();
+    expect(socket.emit).toHaveBeenCalledTimes(0);
+    expect(game.shouldSendUpdate).toBe(true);
 
-      // Run timers twice, as updates are only sent on every second call
-      jest.runOnlyPendingTimers();
-      jest.runOnlyPendingTimers();
-
-      expect(socket.emit)
-        .toHaveBeenCalledWith(
-          Constants.MSG_TYPES.GAME_UPDATE,
-          expect.objectContaining({
-            me: expect.objectContaining({ direction: 2 }),
-          }),
-        );
-    });
+    jest.runOnlyPendingTimers();
+    expect(socket.emit).toHaveBeenCalledTimes(1);
+    expect(socket.emit).toHaveBeenCalledWith(Constants.MSG_TYPES.GAME_UPDATE, expect.any(Object));
+    expect(game.shouldSendUpdate).toBe(false);
   });
 });
